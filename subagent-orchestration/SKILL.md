@@ -84,3 +84,11 @@ Non-goals: commit, push, PR, build
 
 ## Chi tiết
 Xem [references/general.md](references/general.md) — bản đầy đủ với ví dụ SpoofX.
+
+## Kinh nghiệm thực tế (v1 — tiến hoá theo từng lần dùng)
+
+- **Chỉ tin code, bỏ qua chú thích** (2026-10-15, điều tra reverse-skill): khảo sát repo lạ thì grep code thực thi trước, đọc doc sau chỉ để đối chiếu. Kết quả: 45 skills, chỉ 1 có code Android thật (`apk-reverse`); `mobile-reverse` 0 file code dù doc viết đầy đủ Frida/Objection/MSTG.
+- Định nghĩa "file thực thi" trong brief (loại `.md` chứa snippet ra khỏi đếm).
+- Rule "match → verify context → mới tính": grep hit chưa đủ — false positive (biến `index` match "android" trong `review_case.py`).
+- Cross-check version doc-vs-manifest là kỹ thuật rẻ phát hiện drift (SKILL.md ghi jadx 1.5.5 vs manifest pin 1.5.6).
+- `mkdir -p` trước khi redirect output `gh api` — không thì fail im lặng tạo file rỗng.
