@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# new-linkage-check — scaffold a linkage check script + self-running fixtures.
+#
+# Usage: bash new-linkage-check <check-name> [--repo DIR]
+#
+# Creates (in an existing repo dir, default "."):
+#   <repo>/scripts/checks/<check-name>.sh                       (from the template)
+#   <repo>/scripts/checks/tests/fixtures/<check-name>/run-fixtures.sh
+#   <repo>/scripts/checks/tests/fixtures/<check-name>/{pass,fail,exempt}/
+#       README.md, fixture.env (+ fail/EXPECT_OFFENDER, exempt/EXPECT_EXEMPT)
+#
+# The generated files contain FILL: markers. The check and run-fixtures.sh
+# refuse to run (exit 2) until those are filled. Exit: 0 ok · 2 usage/misconfig.
+
+set -euo pipefail
+
+SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TEMPLATE="$SKILL_DIR/assets/check-template.sh"
+RUNNER_TEMPLATE="$SKILL_DIR/assets/run-fixtures-template.sh"
+
+usage() { echo "usage: new-linkage-check <check-name> [--repo DIR]" >&2; exit 2; }
+die() { echo "new-linkage-check: error: $*" >&2; exit 2; }
+
+NAME=""
+REPO="."
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --repo) [[ $# -ge 2 && -n "$2" ]] || usage; REPO="$2"; shift 2 ;;
+        -h|--help) usage ;;
+        -*) usage ;;
+        *) if [[ -z "$NAME" ]]; then NAME="$1"; else usage; fi; shift ;;
+    esac
+done
+[[ -n "$NAME" ]] || usage
+[[ "$NAME" =~ ^[a-z0-9][a-z0-9-]*$ ]] || die "check-name must be lowercase alphanumeric + dashes"
+[[ -d "$REPO" ]] || die "repo dir not found: $REPO"
+[[ -f "$TEMPLATE" ]] || die "template not found: $TEMPLATE"
+[[ -f "$RUNNER_TEMPLATE" ]] || die "template not found: $RUNNER_TEMPLATE"
+
+CHECKS_DIR="$REPO/scripts/checks"
+SCRIPT="$CHECKS_DIR/$NAME.sh"
+FIXDIR="$CHECKS_DIR/tests/fixtures/$NAME"
+RUNNER="$FIXDIR/run-fixtures.sh"
+
+[[ -e "$SCRIPT" ]] && die "already exists: $SCRIPT"
+[[ -e "$FIXDIR" ]] && die "already exists: $FIXDIR"
+
+mkdir -p "$CHECKS_DIR" "$FIXDIR/pass" "$FIXDIR/fail" "$FIXDIR/exempt"
+sed "s/FILL: <check-name>/linkage check: $NAME/" "$TEMPLATE" > "$SCRIPT"
+sed "s/__NAME__/$NAME/g" "$RUNNER_TEMPLATE" > "$RUNNER"
+# Convenience only: docs and tests always invoke via `bash`, so a lost
+# exec bit (zip, some checkouts) never breaks anything.
+chmod +x "$SCRIPT" "$RUNNER"
+
+for fx in pass fail exempt; do
+    cat > "$FIXDIR/$fx/README.md" <<README
+# Fixture: $fx ($NAME)
+
+FILL: miniature A/B trees for this fixture, then point fixture.env at them.
+
+- **pass/**: every A definition appears at B (check must exit 0, PASS:).
+- **fail/**: one synthetic offender (A without B, or a dangling B reference
+  when b2a is enforced) and no escape-hatch marker. Check must exit 1 and
+  name it; list the expected name(s) in fail/EXPECT_OFFENDER.
+- **exempt/**: offender carrying the escape-hatch marker in its attached
+  comment block. Check must exit 0 and list it as exempt; list the name(s)
+  in exempt/EXPECT_EXEMPT.
+
+Run all three:
+
+    bash scripts/checks/tests/fixtures/$NAME/run-fixtures.sh
+README
+    cat > "$FIXDIR/$fx/fixture.env" <<ENV
+# Env overrides for $NAME.sh on this fixture. {fixture} = this dir.
+A_FILE={fixture}/FILL:defs-file
+B_DIR={fixture}/FILL:usage-dir
+ENV
+done
+echo "FILL:expected-offender-name" > "$FIXDIR/fail/EXPECT_OFFENDER"
+echo "FILL:expected-exempt-name" > "$FIXDIR/exempt/EXPECT_EXEMPT"
+
+cat <<MSG
+created:
+  $SCRIPT
+  $RUNNER
+  $FIXDIR/{pass,fail,exempt}/{README.md,fixture.env}
+  $FIXDIR/fail/EXPECT_OFFENDER  $FIXDIR/exempt/EXPECT_EXEMPT
+next:
+  1. fill every FILL: marker (check, fixtures, fixture.env, EXPECT_*)
+  2. bash $RUNNER        # must print PASS: 3 fixtures
+  3. wire both commands into the repo's native validation owner (test
+     target / task runner / existing check script). Wiring CI or hooks is a
+     separate, authorized change; this scaffold does not do it.
+MSG
