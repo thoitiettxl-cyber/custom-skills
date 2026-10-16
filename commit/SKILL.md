@@ -3,6 +3,8 @@ name: commit
 description: "Read this skill before making git commits"
 ---
 
+# Git commit theo Conventional Commits: type(scope): summary, chỉ commit không push — dùng khi tạo commit
+
 Create a git commit for the current changes using a concise Conventional Commits-style subject.
 
 ## Format

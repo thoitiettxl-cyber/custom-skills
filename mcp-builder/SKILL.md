@@ -4,7 +4,7 @@ description: Guide for creating high-quality MCP (Model Context Protocol) server
 license: Complete terms in LICENSE.txt
 ---
 
-# MCP Server Development Guide
+# Xây MCP server (Python FastMCP / Node TS SDK) cho API ngoài — dùng khi tạo MCP server mới
 
 ## Overview
 

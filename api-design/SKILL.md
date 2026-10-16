@@ -5,7 +5,7 @@ metadata:
   origin: ECC
 ---
 
-# API Design Patterns
+# Thiết kế REST API: đặt tên resource, status code, pagination, lỗi, versioning — dùng khi thiết kế hoặc review endpoint
 
 Conventions and best practices for designing consistent, developer-friendly REST APIs.
 
