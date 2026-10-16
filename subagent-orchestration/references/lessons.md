@@ -31,3 +31,5 @@ Mỗi lesson: ngày, task, chuyện gì xảy ra, bằng chứng, rule rút ra. 
 ### 2026-10-16 — 5.1: Floor thay threshold, thêm block TDD ở Phase 2, general.md thành v1 lịch sử.
 
 ### 2026-10-16 — 5.2: refactor thành finding Phase 3, file test vào whitelist.
+
+### 2026-10-16 — 5.3: Phase 2 trỏ sang skill tdd.

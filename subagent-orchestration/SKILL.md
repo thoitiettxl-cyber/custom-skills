@@ -1,12 +1,12 @@
 ---
 name: subagent-orchestration
 description: Orchestrate subagents optimally — outcome-first (Phase 0), depth/range research, implement, review, iterate to metric. Use when delegating multi-agent work.
-version: "5.2"
+version: "5.3"
 ---
 
 # Điều phối subagents tối ưu
 
-v5.2 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
+v5.3 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
 
 ## Phase 0: Outcome (Altitude)
 
@@ -49,7 +49,7 @@ Constraints: <rules + điều cấm> | Output: <format + path> | Non-goals: <exp
 
 Tránh conflict khi sửa cùng file. Brief thêm Outcome + Metric ở đầu. Chỉ implement research đã xong (DRAFT → bỏ qua, ghi lý do). Chưa commit — parent quyết sau review. Non-goals: commit, push, PR, build.
 
-- TDD (chỉ khi task có logic code testable được; log-only/config changes bỏ qua):
+- TDD (chỉ khi task có logic code testable được; log-only/config changes bỏ qua): Chi tiết (seam, mocking, anti-patterns, ví dụ): đọc skill `tdd`.
   - Seam: chốt trước, Boss duyệt; mỗi seam ghi "bắt được / bỏ sót".
   - Mỗi vòng: 1 seam → 1 test đỏ → code tối thiểu → xanh.
   - Expected = literal/ví dụ có lời giải/spec; cấm tính lại bằng logic của code.
