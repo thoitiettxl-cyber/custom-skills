@@ -21,3 +21,7 @@ Mỗi lesson: ngày, task, chuyện gì xảy ra, bằng chứng, rule rút ra. 
 - **Self-test phải đi qua đúng đường cần chứng minh:** hash chuỗi cố định chỉ chứng minh hàm sha đúng, không chứng minh hai phía dùng cùng canonical form. Phải thêm fixture cố định đi qua hàm canonical ở cả hai phía. Rule: test cái đang nghi, không test cái đã chắc.
 - **Nhóm đối chứng có thể "chữa" bug:** fresh pull phía writer có thể làm lành stale → FAIL(A) < FAIL(C) nghĩa là read-back là thuốc chứ không phải thước đo. Rule: pre-register diễn giải cho trường hợp phép đo làm đổi kết quả, trước khi có số liệu.
 - **Nêu rõ cỡ mẫu chứng minh được gì:** 0 lỗi/20 lần chỉ loại được tỷ lệ lỗi trên ~14% (95%), không chứng minh bug biến mất. Rule: báo cáo nêu giới hạn thống kê, không overclaim.
+
+## 2026-10-16 — Floor/Target cho goal khó
+
+- **Goal khó cần tách Floor/Target để không xung đột với stop rule:** một ngưỡng duy nhất vừa là "mục tiêu tham vọng" vừa là điều kiện dừng sẽ ép agent hoặc bỏ cuộc sớm, hoặc nới lỏng metric để "đạt". v5 tách thành Floor (chỉ mức này quyết pass/fail và vòng lặp 3 vòng / không cải thiện / Boss quyết) và Target (khó nhưng khả thi, đưa vào brief như mức đạt được). Rule: thiếu Target không phải failed round — agent báo evidence về điểm chặn, cấm đổi cách đo; external verifier bắt buộc điều này.

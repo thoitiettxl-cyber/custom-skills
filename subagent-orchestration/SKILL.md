@@ -1,18 +1,21 @@
 ---
 name: subagent-orchestration
 description: Orchestrate subagents optimally — outcome-first (Phase 0), depth/range research, implement, review, iterate to metric. Use when delegating multi-agent work.
-version: "4"
+version: "5"
 ---
 
 # Điều phối subagents tối ưu
 
-v4 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
+v5 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
 
 ## Phase 0: Outcome (Altitude)
 
 Hỏi trước mọi task: **outcome là gì, không phải task là gì.**
 
-- Outcome / Metric + Threshold / Verifier (tool agent tự chạy, không tự đánh giá) / Diễn giải (chốt TRƯỚC khi chạy)
+- Outcome / Metric + Floor + Target / Verifier (tool agent tự chạy, không tự đánh giá) / Diễn giải (chốt TRƯỚC khi chạy)
+  - **Floor** <số>: dưới mức này = FAIL; chỉ Floor quyết định pass/fail và vòng lặp (3 vòng / không cải thiện / Boss quyết).
+  - **Target** <số, cố tình khó nhưng khả thi>: đưa vào brief của agent, nói rõ là đạt được.
+  - Thiếu Target KHÔNG phải một vòng fail. Agent phải báo evidence về cái gì đã chặn nó; không bao giờ nới lỏng metric hay đổi cách đo. External verifier bắt buộc điều này.
 - **Readiness check:** agent có đủ data, môi trường, tools để tự reproduce và verify không? Chưa → build cái đó trước.
 
 ## Pattern
@@ -32,10 +35,11 @@ Subtask độc lập, không sửa cùng file, output là tài liệu.
 
 **Brief mẫu:**
 ```
-Outcome: <Phase 0> | Metric: <số + ngưỡng>
+Outcome: <Phase 0> | Metric: <số> | Floor: <FAIL line> | Target: <hard but feasible>
 Task: <một câu> | Skill: <SKILL.md — đọc trước>
 Context: <repo, branch, 3-5 files, pattern mẫu>
 Challenge: <giả định cần kiểm từ dữ liệu thô>
+Discover: <tín hiệu lạ / điểm mù tìm thấy trong dữ liệu thô; phải validate trên held-out data mà agent chưa thấy, nếu không thì gắn tag [CẦN ĐO]>. Chỉ dùng khi task có dữ liệu thô (logs, crashes, metrics); nếu không thì "Discover: N/A". Không bịa finding để lấp đầy.
 Constraints: <rules + điều cấm> | Output: <format + path> | Non-goals: <explicit>
 ```
 
