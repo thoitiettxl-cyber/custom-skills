@@ -1,4 +1,4 @@
-# Quy trình điều phối Subagents tối ưu (dùng cho mọi repo)
+# Quy trình điều phối Subagents tối ưu — bản v1 (lịch sử)
 
 ## Tổng quan
 Pattern 3 phases đã kiểm chứng trên SpoofX (3 researchers → 1 writer → 2 reviewers, tất cả PASS):

@@ -1,12 +1,12 @@
 ---
 name: subagent-orchestration
 description: Orchestrate subagents optimally — outcome-first (Phase 0), depth/range research, implement, review, iterate to metric. Use when delegating multi-agent work.
-version: "5"
+version: "5.1"
 ---
 
 # Điều phối subagents tối ưu
 
-v5 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
+v5.1 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
 
 ## Phase 0: Outcome (Altitude)
 
@@ -15,14 +15,14 @@ Hỏi trước mọi task: **outcome là gì, không phải task là gì.**
 - Outcome / Metric + Floor + Target / Verifier (tool agent tự chạy, không tự đánh giá) / Diễn giải (chốt TRƯỚC khi chạy)
   - **Floor** <số>: dưới mức này = FAIL; chỉ Floor quyết định pass/fail và vòng lặp (3 vòng / không cải thiện / Boss quyết).
   - **Target** <số, cố tình khó nhưng khả thi>: đưa vào brief của agent, nói rõ là đạt được.
-  - Thiếu Target KHÔNG phải một vòng fail. Agent phải báo evidence về cái gì đã chặn nó; không bao giờ nới lỏng metric hay đổi cách đo. External verifier bắt buộc điều này.
+  - Đạt Floor nhưng chưa đạt Target → xong (PASS). Agent báo evidence điểm chặn, không đổi cách đo.
 - **Readiness check:** agent có đủ data, môi trường, tools để tự reproduce và verify không? Chưa → build cái đó trước.
 
 ## Pattern
 
 ```
 Phase 0: OUTCOME → Phase 1: RESEARCH (song song) → Phase 2: IMPLEMENT (1 writer)
-→ Phase 3: REVIEW (song song) → Live test → [lặp nếu metric < threshold]
+→ Phase 3: REVIEW (song song) → Live test → [lặp nếu metric < Floor]
 ```
 
 ## Phase 1: Research (song song)
@@ -49,6 +49,12 @@ Constraints: <rules + điều cấm> | Output: <format + path> | Non-goals: <exp
 
 Tránh conflict khi sửa cùng file. Brief thêm Outcome + Metric ở đầu. Chỉ implement research đã xong (DRAFT → bỏ qua, ghi lý do). Chưa commit — parent quyết sau review. Non-goals: commit, push, PR, build.
 
+- TDD (chỉ khi task có logic code testable được; log-only/config changes bỏ qua):
+  - Seam: chốt trước, Boss duyệt; mỗi seam ghi "bắt được / bỏ sót".
+  - Mỗi vòng: 1 seam → 1 test đỏ → code tối thiểu → xanh.
+  - Expected = literal/ví dụ có lời giải/spec; cấm tính lại bằng logic của code.
+  - Writer không refactor (để Phase 3). Phần "bỏ sót" của seam → [CẦN ĐO]. Live test gate vẫn bắt buộc.
+
 ## Phase 3: Review (song song)
 
 1. Technical 2. Safety 3. Red-team (adversarial — tìm cách phá). Read-only, tất cả PASS mới merge.
@@ -59,7 +65,7 @@ Cho fix đụng runtime/framework: Verify (file:line, `[STATIC]`/`[CẦN ĐO]`) 
 
 ## Vòng lặp sau live test
 
-`metric >= threshold → xong` · `metric < threshold → về Phase 1 với evidence mới`. Dừng: N vòng (mặc định 3) / không cải thiện / Boss quyết.
+`metric >= Floor → xong` · `metric < Floor → về Phase 1 với evidence mới`. Dừng: N vòng (mặc định 3) / không cải thiện / Boss quyết.
 
 ## Checklist repo mới
 
@@ -71,5 +77,5 @@ Cả repo cho agent · nhiều writers · bỏ Phase 0 (đúng task, sai outcome
 
 ## Chi tiết
 
-- [references/general.md](references/general.md) — bản đầy đủ
+- [references/general.md](references/general.md) — bản v1 (lịch sử)
 - [references/lessons.md](references/lessons.md) — kinh nghiệm thực tế
