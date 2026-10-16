@@ -1,12 +1,12 @@
 ---
 name: subagent-orchestration
 description: Orchestrate subagents optimally — outcome-first (Phase 0), depth/range research, implement, review, iterate to metric. Use when delegating multi-agent work.
-version: "5.1"
+version: "5.2"
 ---
 
 # Điều phối subagents tối ưu
 
-v5.1 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
+v5.2 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
 
 ## Phase 0: Outcome (Altitude)
 
@@ -53,7 +53,8 @@ Tránh conflict khi sửa cùng file. Brief thêm Outcome + Metric ở đầu. C
   - Seam: chốt trước, Boss duyệt; mỗi seam ghi "bắt được / bỏ sót".
   - Mỗi vòng: 1 seam → 1 test đỏ → code tối thiểu → xanh.
   - Expected = literal/ví dụ có lời giải/spec; cấm tính lại bằng logic của code.
-  - Writer không refactor (để Phase 3). Phần "bỏ sót" của seam → [CẦN ĐO]. Live test gate vẫn bắt buộc.
+  - Writer không refactor. Đề xuất refactor ghi thành finding ở Phase 3; parent quyết sau review. Phần "bỏ sót" của seam → [CẦN ĐO]. Live test gate vẫn bắt buộc.
+  - File test nằm trong danh sách được phép sửa, khai báo trong brief.
 
 ## Phase 3: Review (song song)
 

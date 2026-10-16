@@ -26,4 +26,8 @@ Mỗi lesson: ngày, task, chuyện gì xảy ra, bằng chứng, rule rút ra. 
 
 ### 2026-10-16 — Floor/Target cho goal khó
 
-- **Goal khó cần tách Floor/Target để không xung đột với stop rule:** một ngưỡng duy nhất vừa là "mục tiêu tham vọng" vừa là điều kiện dừng sẽ ép agent hoặc bỏ cuộc sớm, hoặc nới lỏng metric để "đạt". v5 tách thành Floor (chỉ mức này quyết pass/fail và vòng lặp 3 vòng / không cải thiện / Boss quyết) và Target (khó nhưng khả thi, đưa vào brief như mức đạt được). Rule: thiếu Target không phải failed round — agent báo evidence về điểm chặn, cấm đổi cách đo; external verifier bắt buộc điều này.
+- **Goal khó cần tách Floor/Target để không xung đột với stop rule:** một ngưỡng duy nhất vừa là "mục tiêu tham vọng" vừa là điều kiện dừng sẽ ép agent hoặc bỏ cuộc sớm, hoặc nới lỏng metric để "đạt". v5 tách thành Floor (chỉ mức này quyết pass/fail và vòng lặp 3 vòng / không cải thiện / Boss quyết) và Target (khó nhưng khả thi, đưa vào brief như mức đạt được). Rule: đạt Floor, chưa đạt Target → PASS — agent báo evidence về điểm chặn, cấm đổi cách đo; external verifier bắt buộc điều này.
+
+### 2026-10-16 — 5.1: Floor thay threshold, thêm block TDD ở Phase 2, general.md thành v1 lịch sử.
+
+### 2026-10-16 — 5.2: refactor thành finding Phase 3, file test vào whitelist.
