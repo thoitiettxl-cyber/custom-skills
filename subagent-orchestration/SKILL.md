@@ -1,12 +1,12 @@
 ---
 name: subagent-orchestration
 description: Orchestrate subagents optimally — outcome-first (Phase 0), depth/range research, implement, review, iterate to metric. Use when delegating multi-agent work.
-version: "5.3"
+version: "2"
 ---
 
 # Điều phối subagents tối ưu
 
-v5.3 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
+v2 — theo Felix Rieseberg "How to be more ambitious": Altitude/Depth/Range.
 
 ## Phase 0: Outcome (Altitude)
 
@@ -17,6 +17,8 @@ Hỏi trước mọi task: **outcome là gì, không phải task là gì.**
   - **Target** <số, cố tình khó nhưng khả thi>: đưa vào brief của agent, nói rõ là đạt được.
   - Đạt Floor nhưng chưa đạt Target → xong (PASS). Agent báo evidence điểm chặn, không đổi cách đo.
 - **Readiness check:** agent có đủ data, môi trường, tools để tự reproduce và verify không? Chưa → build cái đó trước.
+- **Ledger chi tiêu:** Khi Boss đặt trần invocation/chi phí: mỗi invocation đánh số trên trần đã duyệt (recon N, hunting M, validation K…); gửi breakdown + chi phí tối đa từng bước TRƯỚC khi chạy. Vi phạm thứ tự → ghi vào run notes ngay, không lặng lẽ cho qua.
+- **Báo cáo status:** trích nguyên văn định nghĩa từ ledger/skill (vd `candidate` ≠ `covered`); `stop=true` của critic chỉ là check gap, không phải bằng chứng coverage.
 
 ## Pattern
 
@@ -43,7 +45,7 @@ Discover: <tín hiệu lạ / điểm mù tìm thấy trong dữ liệu thô; ph
 Constraints: <rules + điều cấm> | Output: <format + path> | Non-goals: <explicit>
 ```
 
-**Nguyên tắc:** output file riêng, không sửa repo · evidence thiếu → nói cần gì, không đoán · tối đa 3-4 song song · review framing câu hỏi trước khi chạy · kết luận gắn `[STATIC]`/`[CẦN ĐO]` + file:line.
+**Nguyên tắc:** output file riêng, không sửa repo · evidence thiếu → nói cần gì, không đoán · tối đa 3-4 song song · review framing câu hỏi trước khi chạy · kết luận gắn `[STATIC]`/`[CẦN ĐO]` + file:line · held-out data cô lập bằng cấu trúc (worktree riêng, brief không chứa nội dung plan), không bằng lời dặn "đừng xem".
 
 ## Phase 2: Implement (1 writer)
 
@@ -59,6 +61,8 @@ Tránh conflict khi sửa cùng file. Brief thêm Outcome + Metric ở đầu. C
 ## Phase 3: Review (song song)
 
 1. Technical 2. Safety 3. Red-team (adversarial — tìm cách phá). Read-only, tất cả PASS mới merge.
+- Brief verifier độc lập: "bạn không làm bước trước — verify record, không verify lời agent". Independence sinh evidence mới (verifier tìm ra cơ chế + điểm mù hunter bỏ sót), không chỉ đóng stamp.
+- Finalize artifact TRƯỚC khi verifier thấy: verify bản đã biết stale tốn nguyên một vòng verifier.
 
 ## Gate: verify → propose → approve → live test → commit
 

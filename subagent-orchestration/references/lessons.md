@@ -22,7 +22,37 @@ Mỗi lesson: ngày, task, chuyện gì xảy ra, bằng chứng, rule rút ra. 
 - **Nhóm đối chứng có thể "chữa" bug:** fresh pull phía writer có thể làm lành stale → FAIL(A) < FAIL(C) nghĩa là read-back là thuốc chứ không phải thước đo. Rule: pre-register diễn giải cho trường hợp phép đo làm đổi kết quả, trước khi có số liệu.
 - **Nêu rõ cỡ mẫu chứng minh được gì:** 0 lỗi/20 lần chỉ loại được tỷ lệ lỗi trên ~14% (95%), không chứng minh bug biến mất. Rule: báo cáo nêu giới hạn thống kê, không overclaim.
 
+## 2026-10-16 — Sing-box: đo trước khi sửa
+
+- **Verify giả thuyết bằng bảng mẫu thô trước khi đổi code:** nghi password "rotate mỗi exec" (TTL ngắn) → probe 908 domains liên tiếp (~1h) bằng 1 credential duy nhất: 908/908 CONNECT 200, 0× 407 → giả thuyết SAI, password ổn định. Bằng chứng: `~/workspace/apk-domains/egress-probe-full.tsv` (908 dòng).
+
+## 2026-10-17 — Sing-box watchdog: trigger log và live test
+
+- **Trigger quét log phải theo byte offset, không tail N:** watchdog chỉ xét lines mới hơn offset trong `.authfail-offset` (reset khi rotate; lần đầu chỉ baseline, không act). Không offset → quét lại dòng cũ → vòng lặp restart.
+- **Chứng minh chuỗi log bằng instance cố tình hỏng, không dùng live:** trigger `authentication required` được chứng minh bằng instance tạm đặt password sai — không bao giờ thử trên tunnel live.
+- **Process cha sống lâu đóng băng env:** env của run.sh bị đóng băng lúc start (chứng minh qua /proc: run.sh pid 27410 sha8 `1f4cf5f2` vs fresh shell `601243fd`) → khi trigger, kill run.sh (không chỉ child) rồi respawn lấy env tươi.
+- **Live test bắt 2 bug mà review tĩnh bỏ sót** (fix ngay cùng commit): (1) watchdog dùng chung `.watchdog.lock` với run.sh — run.sh giữ lock suốt đời nên `flock -n` của watchdog luôn fail, exit im lặng không bao giờ check; fix: lock riêng `.watchdog-wd.lock`. (2) `sleep 3` sau kill không đủ — sing-box child thừa kế fd lock từ run.sh, instance mới bị "another instance holds the lock"; fix: wait loop tối đa 20s chờ cả run.sh lẫn child chết hẳn.
+
+## 2026-10-17 — Linkage survey: red-team bắt bug thật
+
+- **Review ngoài trước apply bắt bug thật:** red-team bắt 2 lỗi thật — 7 scripts quên strip `//` phía A gây báo oan; regex của một check bắt nhầm tên class. Rule: giữ review gate độc lập trước khi apply; reviewer đọc diff/code, không đọc tóm tắt.
+
+## 2026-10-17 — Security audit run-1: kỷ luật verify và báo cáo
+
+- **Cô lập held-out bằng cấu trúc, không bằng lời dặn:** recall item creatorPackage được hunter h-u03 rediscover độc lập → recall 1/1. Bằng chứng: worktree sạch detached tại d08d2e9, 0 untracked files; held-out list chỉ nằm ở PLAN.md phía parent, không có trong snapshot; brief hunter không chứa nội dung plan; mapping "commit = known finding" chưa từng commit vào repo.
+- **Trích nguyên văn định nghĩa status khi báo cáo:** đã báo "16/16 complete / 100% trust-boundary" rồi phải sửa thành 12/16 = 75% sau khi đọc lại HUNTING.md (`candidate` ≠ `covered`; covered đòi "no candidate").
+- **Finalize artifact trước khi verifier thấy:** rework findings 1-2 (attacker model, precondition, severity) inline TRƯỚC khi spawn Phase-5 → cả 3 verifier trả "verified" ngay vòng đầu, không tốn vòng replace.
+- **Verifier độc lập sinh evidence mới:** v-fp5 (chưa từng thấy candidate) không chỉ confirm mà tìm ra cơ chế spoof cụ thể (`createPackageContext`) + phát hiện receiver không bao giờ đọc `creatorUid` (grep toàn repo: 0 tham chiếu).
+- **Vi phạm thứ tự phải ghi nhận:** spawn v-fp5 trước khi gửi breakdown (trái điều kiện Boss) → ghi vào run-notes.md ngay theo lệnh Boss, không lặng lẽ cho qua.
+- **Ledger chi tiêu theo invocation:** trần 25→31, mỗi spawn đánh số (26/31, 27/31…), tổng dừng ở 29/31.
+
 ## Changelog (thiết kế, chưa kiểm chứng)
+
+### 2026-10-17 — v2: kỷ luật verify/báo cáo từ audit run-1 + bài học sing-box watchdog
+
+- **v2 thay thế 5.3 (reset baseline, không phải downgrade):** dòng 5.x là các bước tăng dần từ v5 (Floor/Target); v2 là baseline mới hợp nhất toàn bộ — đọc v2 thay cho mọi bản 5.x trước đó.
+- lessons.md: 6 lessons audit (cô lập held-out, quote định nghĩa status, finalize trước verify, verifier độc lập, ghi nhận vi phạm thứ tự, ledger chi tiêu) + đo-trước-sửa (password rotation) + trigger log theo offset + instance hỏng chứng minh chuỗi log + env đóng băng + 2 bug live test + red-team bắt bug thật.
+- SKILL.md: bổ sung ledger chi tiêu + quote định nghĩa (Phase 0), cô lập held-out bằng cấu trúc (Phase 1), verifier independence + finalize-trước-verify (Phase 3). Gate verify→propose→approve→live test→commit giữ nguyên.
 
 ### 2026-10-16 — Floor/Target cho goal khó
 
