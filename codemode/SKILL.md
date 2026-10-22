@@ -10,7 +10,7 @@ Hệ thống đã đăng ký sẵn codemode làm mặc định: chạy JS do mod
 Dựa trên `@earendil-works/pi-codemode@1.2.0` (pin exact). Code tại `~/workspace/codemode/`,
 binary tại `~/.local/bin/codemode`, state tại `~/.config/codemode/store.json`.
 Repo public: `thoitiettxl-cyber/muse-codemode` (kèm `smoke.sh` — 10 checks).
-Mọi thứ nằm dưới `~` nên tồn tại sau VM replace.
+Mọi thứ nằm dưới `~`, nên theo AGENTS.md:62 sẽ còn sau VM replace (home là volume btrfs riêng mount tại `/home/hatch`).
 
 ## Khi nào dùng thay vì gọi tool lẻ
 
@@ -49,8 +49,8 @@ Exit code: 0 ok, 1 lỗi script, 2 timeout, 3 aborted, 4 lỗi sandbox/host,
   `cwd` mặc định `$HOME` và phải nằm dưới `$HOME`; `shell:true` để dùng pipe/glob qua bash.
 - `mcp({server, name, args?, timeoutMs?})` — gọi tool MCP qua **session persistent**
   (connect 1 lần/run, tái dùng cho mọi call — workflow nhiều bước giữ được
-  server-side state, vd evidence của REA); servers: openai-docs, xai-docs,
-  anthropic-docs, cloudflare, context7, exa, ksht, firecrawl, inspo, rea.
+  server-side state giữa các call); servers: openai-docs, xai-docs,
+  anthropic-docs, cloudflare, context7, exa, ksht, firecrawl, inspo.
 
 Mọi path trong `read`/`write`/`exec.cwd` đều bị chặn nếu thoát khỏi `$HOME`.
 
@@ -71,11 +71,18 @@ return deps.length;
 ```
 
 ```js
-// gọi MCP: tra docs của quickjs qua server docs (timeout riêng 20s)
+// gọi MCP: tra docs của quickjs qua context7 (resolve libraryId trước, timeout riêng 20s)
+const lib = await tools.mcp({
+  server: "context7",
+  name: "resolve-library-id",
+  args: { query: "QuickJS memory limit", libraryName: "quickjs" },
+  timeoutMs: 20000,
+});
+text(String(lib).slice(0, 500)); // chọn libraryId (dạng "/org/project") từ kết quả
 const doc = await tools.mcp({
   server: "context7",
   name: "query-docs",
-  args: { query: "QuickJS memory limit" },
+  args: { libraryId: "/quickjs-ng/quickjs", query: "QuickJS memory limit" },
   timeoutMs: 20000,
 });
 text(doc.slice(0, 500));

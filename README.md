@@ -7,6 +7,7 @@ Each skill lives in its own directory with a `SKILL.md` describing when and
 how to use it:
 
 - `api-design` — API design patterns
+- `apk-reverse` — Android APK reverse engineering (jadx/apktool/Frida)
 - `cli-creator` — scaffold CLIs
 - `code-review` — review code against standards and spec
 - `codebase-design` — deep-module design, seams, testability
@@ -18,7 +19,7 @@ how to use it:
 - `github` — GitHub workflows
 - `grill-with-docs` — grill a plan while producing docs
 - `grilling` — ruthless stress-test of a plan or idea
-- `heal` — self-healing for the Hatch VM
+- `heal` — self-healing for the Hatch VM (local-only on Muse at `~/workspace/custom-skills/heal`; not in this repo)
 - `improve-codebase-architecture` — architecture review with visual HTML report
 - `librarian` — shared cache checkout management
 - `linkage-checks` — turn definition/usage invariants into check scripts
@@ -26,8 +27,9 @@ how to use it:
 - `mcp-client` — MCP client wrapper
 - `native-web-search` — fast query+purpose web research pattern
 - `search-playbook` — search routing: need → lookup channel
+- `security-audit` — security audit / pen-test workflow (from cloudflare/security-audit-skill)
 - `subagent-orchestration` — coordinate subagents efficiently
-- `summarize` — summarization conventions
+- `summarize` — URL/file → Markdown via markitdown, optional summary brief
 - `tdd` — red → green test-first at chosen seams
 - `technical-scoping-workflow` — technical scoping: baseline → gaps → phases
 - `tmux` — tmux workflows

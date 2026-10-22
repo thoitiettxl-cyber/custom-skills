@@ -19,6 +19,7 @@ SEARCH_PATHS=(
     # Linux common paths
     "/usr/share/ghidra"
     "/usr/local/share/ghidra"
+    "$HOME/.local/share/ghidra"
 )
 
 # Check GHIDRA_HOME environment variable first

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
  * Convert a URL or local file to Markdown using `uvx markitdown`.
- * Optionally summarize the produced Markdown via `pi` (claude-haiku-4-5).
+ * Optionally prepare a summarization brief for the produced Markdown (the agent summarizes it itself).
  *
  * Note: `markitdown` can fetch URLs on its own; this script mainly adds:
  *   - optional writing to a temp file / specific output path
- *   - optional summarization via `pi`
+ *   - optional summarization brief (no external model is called)
  *   - ability to add a *custom summary prompt/context* (highly recommended)
  *
  * Usage:
@@ -149,60 +149,22 @@ function runMarkitdown(arg) {
   return result.stdout;
 }
 
-function summarizeWithPi(markdown, { mdPathForNote = null, extraPrompt = null } = {}) {
-  const MAX_CHARS = 140_000;
-  let truncated = false;
-  let body = markdown;
-  if (body.length > MAX_CHARS) {
-    // Keep start + end for better summaries.
-    const head = body.slice(0, 110_000);
-    const tail = body.slice(-20_000);
-    body = `${head}\n\n[...TRUNCATED ${body.length - (head.length + tail.length)} chars...]\n\n${tail}`;
-    truncated = true;
-  }
-
+function buildSummaryBrief(markdown, { mdPathForNote = null, extraPrompt = null } = {}) {
   const note = mdPathForNote ? `\n\n(Generated markdown file: ${mdPathForNote})\n` : '';
-  const truncNote = truncated ? '\n\nNote: Input was truncated due to size.' : '';
-
+  
   const contextBlock = extraPrompt
     ? `\n\nUser-provided context / instructions (follow these closely):\n${extraPrompt}\n`
     : `\n\nNo extra context was provided. If the summary seems misaligned, ask the user for what to focus on (goals, audience, what to extract).\n`;
 
-  const prompt = `You are summarizing a document that has been converted to Markdown.${note}
+  return `Summarize the document in the generated Markdown file (path in the Hint line below). Read the file yourself; no external model was called.
 ${contextBlock}
 Please produce:
 - A short 1-paragraph executive summary
 - 8-15 bullet points of key facts / decisions / requirements
 - A section "Open questions / missing info" (bullets)
 
-Be concise. Preserve important numbers, names, and constraints.
-${truncNote}
-
---- BEGIN DOCUMENT (Markdown) ---
-${body}
---- END DOCUMENT ---`;
-
-  const result = spawnSync('pi', [
-    '--provider', 'anthropic',
-    '--model', 'claude-haiku-4-5',
-    '--no-tools',
-    '--no-session',
-    '-p',
-    prompt
-  ], {
-    encoding: 'utf-8',
-    maxBuffer: 20 * 1024 * 1024,
-    timeout: 120_000
-  });
-
-  if (result.error) {
-    throw new Error(`Failed to run pi: ${result.error.message}`);
-  }
-  if (result.status !== 0) {
-    const stderr = (result.stderr || '').trim();
-    throw new Error(`pi failed${stderr ? `\n${stderr}` : ''}`);
-  }
-  return (result.stdout || '').trim();
+Be concise. Preserve important numbers, names, and constraints.${note}
+`;
 }
 
 async function main() {
@@ -234,7 +196,7 @@ async function main() {
   }
 
   if (doSummary) {
-    const summary = summarizeWithPi(md, { mdPathForNote: tmpMdPath ?? outPath, extraPrompt: summaryPrompt });
+    const summary = buildSummaryBrief(md, { mdPathForNote: tmpMdPath ?? outPath, extraPrompt: summaryPrompt });
     process.stdout.write(summary);
     if (tmpMdPath) {
       process.stdout.write(`\n\n[Hint: Full document Markdown saved to: ${tmpMdPath}]\n`);

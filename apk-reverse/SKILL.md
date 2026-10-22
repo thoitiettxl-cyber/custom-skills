@@ -83,6 +83,8 @@ Produces `<name>-unsigned.apk`, `<name>-aligned.apk`, `<name>-signed.apk`.
 | `zipalign`, `apksigner` | Align + sign | `sudo apt install android-sdk-build-tools` or `sdkmanager "build-tools;35.0.0"` |
 | `keytool`, `java` | Debug keystore | `sudo apt install default-jdk` |
 
+**Login shell:** on Muse the full toolchain (`~/.local/bin`, `~/.local/jdk-21/bin`) is only on PATH in a login shell — run commands via `bash --login -c '...'` if `which <tool>` comes up empty.
+
 ## Recommended workflow
 
 1. **Triage** — `decode.sh`: check the manifest, main package, components,

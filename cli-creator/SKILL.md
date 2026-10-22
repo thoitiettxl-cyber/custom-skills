@@ -1,6 +1,6 @@
 ---
 name: cli-creator
-description: Build a composable CLI for Codex from API docs, an OpenAPI spec, existing curl examples, an SDK, a web app, an admin tool, or a local script. Use when the user wants Codex to create a command-line tool that can run from any repo, expose composable read/write commands, return stable JSON, manage auth, and pair with a companion skill.
+description: Build a composable CLI for Muse from API docs, an OpenAPI spec, existing curl examples, an SDK, a web app, an admin tool, or a local script. Use when the user wants Muse to create a command-line tool that can run from any repo, expose composable read/write commands, return stable JSON, manage auth, and pair with a companion skill.
 ---
 
 # Tạo CLI bền từ API docs/OpenAPI/curl/SDK, xuất JSON, quản lý auth — dùng khi cần tool dòng lệnh dùng lại được
@@ -143,7 +143,7 @@ Add a `Makefile` target such as `make install-local` that installs the command o
 
 ## Companion Skill
 
-After the CLI works, create or update a small skill for it. Use `$skill-creator` when it is available. Use `$CODEX_HOME/skills/<tool-name>/SKILL.md` for a personal companion skill unless the user names a repo-local `.codex/skills/...` path or another skill repo.
+After the CLI works, create or update a small skill for it. Use the `skill-creator` skill at `/opt/hatch/skills` when it helps (it is not returned by `muse.skill_search`; read it directly). Use `~/workspace/custom-skills/<tool-name>/SKILL.md` for a companion skill unless the user names another skill repo.
 
 Write the companion skill in the order a future Codex thread should use the CLI, not as a tour of every feature. Explain:
 

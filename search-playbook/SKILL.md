@@ -23,6 +23,8 @@ channel that was not queried.
 5. For prices, availability, hours, or other volatile figures, open the live
    page and note when it was checked.
 6. If an MCP tool name might be stale, verify it before calling.
+7. An empty or failed `mcp list-tools` means retry once; never conclude a
+   server or tool is missing from one failed listing.
 
 ## Routing
 
@@ -30,9 +32,9 @@ channel that was not queried.
 |---|---|---|---|
 | News or current facts | `native-web-search` (pattern skill) | `browser.search` with `news` vertical, or Exa via MCP | `browser.open` |
 | How-to or debugging | Exa / Firecrawl via MCP | Official docs; Context7 via MCP if a library API is involved | `browser.open` |
-| Code or an existing implementation | Exa code search via MCP | `gh` search and `rg` in the repo | Open the source file |
+| Code or an existing implementation | Exa `web_search_exa` or `firecrawl_developer_search` via MCP | `gh` search and `rg` in the repo | Open the source file |
 | Company or person | Exa via MCP | Firecrawl via MCP | Fetch the primary profile or site |
-| JS-heavy or blocked page | live browser (`browser.spawn_task`) | Firecrawl scrape via MCP | — |
+| JS-heavy or blocked page | live browser (`browser.browse`, `task_id: "new"`) | Firecrawl scrape via MCP | — |
 | Whole site | Firecrawl map / crawl via MCP | — | — |
 | Library or framework docs | Context7 via MCP | Vendor docs MCP | — |
 | OpenAI, Anthropic, or xAI docs | That vendor's docs MCP (`openai-docs`, `anthropic-docs`, `xai-docs`) | Context7 if it covers the same library | Fetch the doc page |
@@ -47,10 +49,15 @@ channel that was not queried.
 `native-web-search` here is the pattern skill (query + purpose → findings with
 URLs); the original Pi `search.mjs` script was dropped.
 
-Firecrawl extras, when the query matches: `categories: ["developer"]` for
-public code, issues, and READMEs; `categories: ["gov"]` for US government and
-regulatory sources (do not combine `gov` with other categories);
-`firecrawl_research_search_papers` for paper abstracts and full text.
+Exa tools: `web_search_exa` (`query` required, plus `objective`),
+`web_fetch_exa` (`urls`), `agent_run`. There is no Exa code-search tool.
+
+Firecrawl extras, when the query matches: `firecrawl_search` `categories`
+(`research`, `pdf`, `developer`, `gov`) — `developer` for public code, issues,
+and READMEs; `gov` for US government and regulatory sources (do not combine
+`gov` with other categories). Dedicated tools: `firecrawl_developer_search`,
+`firecrawl_gov_search`. Papers: `firecrawl_research_search_papers`,
+`_inspect_paper`, `_related_papers`, `_read_paper`.
 
 Cloudflare note: a docs result is not permission to change production resources.
 

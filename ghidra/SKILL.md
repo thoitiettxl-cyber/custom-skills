@@ -21,10 +21,12 @@ Perform automated reverse engineering using Ghidra's `analyzeHeadless` tool. Imp
 
 ## Prerequisites
 
-- **Ghidra** must be installed. On macOS: `brew install --cask ghidra`
+- **Ghidra** must be installed. On Linux, unzip a release from https://github.com/NationalSecurityAgency/ghidra/releases (on Muse it lives at `~/.local/share/ghidra`, i.e. `~/.local/share/ghidra/support/analyzeHeadless`) or set `GHIDRA_HOME`.
 - **Java** (OpenJDK 17+) must be available
 
-The skill automatically locates Ghidra in common installation paths. Set `GHIDRA_HOME` environment variable if Ghidra is installed in a non-standard location.
+The skill automatically locates Ghidra in common installation paths. Set `GHIDRA_HOME` environment variable if Ghidra is installed in a non-standard location. `find-ghidra.sh` can take >20s (it falls back to `find`); a timeout is not proof Ghidra is absent.
+
+**Login shell:** on Muse the full toolchain (`~/.local/bin`, `~/.local/jdk-21/bin`) is only on PATH in a login shell — run commands via `bash --login -c '...'` if `which <tool>` comes up empty.
 
 ---
 

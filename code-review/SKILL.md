@@ -59,7 +59,7 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 ### 4. Spawn both sub-agents in parallel
 
-Issue both sub-agent calls together, in the foreground, and aggregate the reports they return.
+Spawn both sub-agents together with `subagent.spawn {message}` (async, in parallel), and aggregate their reports when the results arrive.
 
 **Standards sub-agent prompt** should include:
 

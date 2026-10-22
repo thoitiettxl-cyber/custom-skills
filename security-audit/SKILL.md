@@ -21,10 +21,10 @@ If the request could mean either mode, ask one focused question before creating 
 This skill is agent-neutral:
 
 - **Parent** is the agent that coordinates the run and owns shared state.
-- **Task tool** is the platform's delegation or sub-agent mechanism.
+- **Task tool** is the platform's delegation or sub-agent mechanism. On Muse this is `subagent.spawn {message}` (async; results arrive later; manage with `subagent.list/send/resume/close`). There is no Task tool or foreground mode.
 - **`research` agent** is a delegated agent for focused source exploration and factual verification.
 - **`general` agent** is a delegated agent for broad investigation and bounded local execution.
-- **`subagent_type:`** in a heading names which of these two delegated agent roles runs that work.
+- **`subagent_type:`** in a heading names which of these two delegated agent roles runs that work. On Muse there is no `subagent_type` parameter: state the role (`research` or `general`) at the top of the `subagent.spawn` message brief.
 
 Use equivalent platform capabilities while preserving role, write-isolation, prompt, and independence boundaries.
 

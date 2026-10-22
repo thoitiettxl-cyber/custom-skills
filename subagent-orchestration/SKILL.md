@@ -27,6 +27,8 @@ Phase 0: OUTCOME → Phase 1: RESEARCH (song song) → Phase 2: IMPLEMENT (1 wri
 → Phase 3: REVIEW (song song) → Live test → [lặp nếu metric < Floor]
 ```
 
+Cú pháp trên Muse: `subagent.spawn {message: "<brief>"}` (async, kết quả trả về sau; quản lý bằng `subagent.list/send/resume/close`).
+
 ## Phase 1: Research (song song)
 
 Subtask độc lập, không sửa cùng file, output là tài liệu.

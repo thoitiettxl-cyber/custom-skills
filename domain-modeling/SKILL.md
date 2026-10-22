@@ -13,7 +13,7 @@ Resolve `<product>` and `<decisions>` per `~/workspace/harness/WORKFLOW.md`
 (inside a repo: `docs/product/` and `docs/decisions/`; outside a repo:
 `~/workspace/product/<project>/` and `~/workspace/decisions/`). State the resolved
 path before writing anything; create files lazily — only when you have something
-to write.
+to write. (On Muse `~/workspace/product/` and `~/workspace/decisions/` currently hold only a README: expect no existing glossary/ADRs there.)
 
 Most projects have a single context:
 
