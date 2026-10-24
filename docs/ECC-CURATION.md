@@ -1,3 +1,5 @@
+Status: approved as-is by Boss 2026-10-24; PR #3 merged with only the 12 keeps below (298 other ECC skills removed from the branch).
+
 # ECC Curation — proposed keep/drop for PR #3
 
 Status: PROPOSED, awaiting Boss review. Nothing in this doc merges anything.
