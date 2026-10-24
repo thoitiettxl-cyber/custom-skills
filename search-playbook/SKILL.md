@@ -12,6 +12,19 @@ Use this routing for the tools installed in this system. Do not invent tool
 names. If a channel is missing, say so. Do not report "nothing found" for a
 channel that was not queried.
 
+Tool-shell note (2026-10-24, verified after the mcp/codemode reinstall):
+`mcp` works in a plain tool shell via the heal skill's `scripts/mcp`
+wrapper (runtime adds every skill's `scripts/` dir to PATH per-exec),
+which loads the API keys from `~/.config/heal/tool-env.sh` — no login
+shell and no rc sourcing needed. Servers: `openai-docs`, `xai-docs`,
+`anthropic-docs` (public), `cloudflare` (OAuth — run `mcp auth
+--server cloudflare` first, it has no token by default),
+`context7` (CONTEXT7_API_KEY), `exa` (EXA_API_KEY), `firecrawl`
+(FIRECRAWL_API_KEY), `inspo` (public). `ksht` is registered but no
+KSHT_API_KEY is installed on this VM, so do not route to it as a first
+channel; REDIS_API_KEY and TYPESAFE_API_KEY are installed but are not
+used by any MCP server in the registry.
+
 ## Rules
 
 1. Search for sources, not finished answers. A snippet is not a fact.
@@ -30,16 +43,16 @@ channel that was not queried.
 
 | Need | First | Second | Read the page |
 |---|---|---|---|
-| News or current facts | `native-web-search` (pattern skill) | `browser.search` with `news` vertical, or Exa via MCP | `browser.open` |
-| How-to or debugging | Exa / Firecrawl via MCP | Official docs; Context7 via MCP if a library API is involved | `browser.open` |
-| Code or an existing implementation | Exa `web_search_exa` or `firecrawl_developer_search` via MCP | `gh` search and `rg` in the repo | Open the source file |
-| Company or person | Exa via MCP | Firecrawl via MCP | Fetch the primary profile or site |
-| JS-heavy or blocked page | live browser (`browser.browse`, `task_id: "new"`) | Firecrawl scrape via MCP | — |
-| Whole site | Firecrawl map / crawl via MCP | — | — |
-| Library or framework docs | Context7 via MCP | Vendor docs MCP | — |
+| News or current facts | `native-web-search` (pattern skill) | `browser.search` with `news` vertical, or Exa via `mcp` CLI | `browser.open` |
+| How-to or debugging | Exa / Firecrawl via `mcp` CLI | Official docs; Context7 via `mcp` CLI if a library API is involved | `browser.open` |
+| Code or an existing implementation | Exa `web_search_exa` via `mcp` CLI (see below; `firecrawl_developer_search` only if `mcp list-tools --server firecrawl` actually lists it — see Firecrawl note) | `gh` search and `rg` in the repo | Open the source file |
+| Company or person | Exa via `mcp` CLI | Firecrawl via `mcp` CLI | Fetch the primary profile or site |
+| JS-heavy or blocked page | live browser (`browser.browse`, `task_id: "new"`) | Firecrawl scrape via `mcp` CLI | — |
+| Whole site | Firecrawl map / crawl via `mcp` CLI | — | — |
+| Library or framework docs | Context7 via `mcp` CLI | Vendor docs MCP | — |
 | OpenAI, Anthropic, or xAI docs | That vendor's docs MCP (`openai-docs`, `anthropic-docs`, `xai-docs`) | Context7 if it covers the same library | Fetch the doc page |
-| Cloudflare docs or API shape | `cloudflare` MCP via the `mcp` CLI | — | Read the doc URL the tool returns |
-| UI reference | Inspo `search_screens` via MCP | `image_search` skill | `get_screen` for the chosen screen |
+| Cloudflare docs or API shape | `cloudflare` MCP via the `mcp` CLI (auth first, see above) | — | Read the doc URL the tool returns |
+| UI reference | Inspo via `mcp` CLI (verify tool names with `mcp list-tools --server inspo` first) | `image_search` skill | Fetch the chosen screen |
 | Images | `image_search` skill | — | — |
 | Products / shopping | `shopping` skill | — | — |
 | Social posts | `social.search` | — | — |
@@ -49,15 +62,32 @@ channel that was not queried.
 `native-web-search` here is the pattern skill (query + purpose → findings with
 URLs); the original Pi `search.mjs` script was dropped.
 
-Exa tools: `web_search_exa` (`query` required, plus `objective`),
-`web_fetch_exa` (`urls`), `agent_run`. There is no Exa code-search tool.
+Exa tools, verified 2026-10-24 via `mcp list-tools --server exa`:
+`web_search_exa` (`query` and `objective` both required),
+`web_fetch_exa` (`urls`), `agent_run` (multi-step research; not for a
+single lookup). There is no Exa code-search tool. Context7 tools,
+verified the same way: `resolve-library-id` first, then `query-docs`
+with the exact libraryId (`/org/project`).
 
-Firecrawl extras, when the query matches: `firecrawl_search` `categories`
+All MCP calls go through the `mcp` CLI, e.g.
+`mcp call-tool --server exa --name web_search_exa --args-json '{…}' --llm`.
+If `mcp list-tools` is empty or fails, retry once, then say the channel
+is unavailable — do not report "nothing found" for a channel that was
+not queried.
+
+Firecrawl tools, verified 2026-10-24 via `mcp list-tools --server
+firecrawl` (use the `mcp` CLI, not a direct HTTP call, unless the MCP
+server is down): `firecrawl_scrape` (one URL), `firecrawl_map`
+(list a site's URLs), `firecrawl_crawl` + `firecrawl_check_crawl_status`
+(collect a set of pages), `firecrawl_search` with `categories`
 (`research`, `pdf`, `developer`, `gov`) — `developer` for public code, issues,
 and READMEs; `gov` for US government and regulatory sources (do not combine
 `gov` with other categories). Dedicated tools: `firecrawl_developer_search`,
 `firecrawl_gov_search`. Papers: `firecrawl_research_search_papers`,
-`_inspect_paper`, `_related_papers`, `_read_paper`.
+`firecrawl_research_inspect_paper`, `firecrawl_research_related_papers`,
+`firecrawl_research_read_paper`. If a tool name is not in that list,
+re-run `mcp list-tools --server firecrawl` before calling it; do not
+invent a variant.
 
 Cloudflare note: a docs result is not permission to change production resources.
 
