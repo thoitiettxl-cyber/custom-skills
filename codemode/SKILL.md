@@ -50,7 +50,7 @@ Exit code: 0 ok, 1 lỗi script, 2 timeout, 3 aborted, 4 lỗi sandbox/host,
 - `mcp({server, name, args?, timeoutMs?})` — gọi tool MCP qua **session persistent**
   (connect 1 lần/run, tái dùng cho mọi call — workflow nhiều bước giữ được
   server-side state giữa các call); servers: openai-docs, xai-docs,
-  anthropic-docs, cloudflare, context7, exa, ksht, firecrawl, inspo.
+  anthropic-docs, context7, exa, firecrawl, inspo.
 
 Mọi path trong `read`/`write`/`exec.cwd` đều bị chặn nếu thoát khỏi `$HOME`.
 

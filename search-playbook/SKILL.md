@@ -17,13 +17,10 @@ Tool-shell note (2026-10-24, verified after the mcp/codemode reinstall):
 wrapper (runtime adds every skill's `scripts/` dir to PATH per-exec),
 which loads the API keys from `~/.config/heal/tool-env.sh` — no login
 shell and no rc sourcing needed. Servers: `openai-docs`, `xai-docs`,
-`anthropic-docs` (public), `cloudflare` (OAuth — run `mcp auth
---server cloudflare` first, it has no token by default),
-`context7` (CONTEXT7_API_KEY), `exa` (EXA_API_KEY), `firecrawl`
-(FIRECRAWL_API_KEY), `inspo` (public). `ksht` is registered but no
-KSHT_API_KEY is installed on this VM, so do not route to it as a first
-channel; REDIS_API_KEY and TYPESAFE_API_KEY are installed but are not
-used by any MCP server in the registry.
+`anthropic-docs` (public), `context7` (CONTEXT7_API_KEY), `exa`
+(EXA_API_KEY), `firecrawl` (FIRECRAWL_API_KEY), `inspo` (public).
+REDIS_API_KEY and TYPESAFE_API_KEY are installed but are not used by
+any MCP server in the registry.
 
 ## Rules
 
@@ -51,7 +48,6 @@ used by any MCP server in the registry.
 | Whole site | Firecrawl map / crawl via `mcp` CLI | — | — |
 | Library or framework docs | Context7 via `mcp` CLI | Vendor docs MCP | — |
 | OpenAI, Anthropic, or xAI docs | That vendor's docs MCP (`openai-docs`, `anthropic-docs`, `xai-docs`) | Context7 if it covers the same library | Fetch the doc page |
-| Cloudflare docs or API shape | `cloudflare` MCP via the `mcp` CLI (auth first, see above) | — | Read the doc URL the tool returns |
 | UI reference | Inspo via `mcp` CLI (verify tool names with `mcp list-tools --server inspo` first) | `image_search` skill | Fetch the chosen screen |
 | Images | `image_search` skill | — | — |
 | Products / shopping | `shopping` skill | — | — |
@@ -89,7 +85,7 @@ and READMEs; `gov` for US government and regulatory sources (do not combine
 re-run `mcp list-tools --server firecrawl` before calling it; do not
 invent a variant.
 
-Cloudflare note: a docs result is not permission to change production resources.
+Note: a docs result is not permission to change production resources.
 
 ## Long research
 
