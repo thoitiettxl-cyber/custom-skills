@@ -3,7 +3,7 @@ name: grilling
 description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
 ---
 
-# Chất vấn không khoan nhượng về plan/quyết định/ý tưởng — dùng khi user muốn stress-test suy nghĩ hoặc dùng từ khóa "grill"
+# Relentless questioning of a plan/decision/idea — use when the user wants to stress-test their thinking or uses the keyword "grill"
 
 Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
 

@@ -1,96 +1,96 @@
-# Quy trình điều phối Subagents tối ưu — bản v1 (lịch sử)
+# Optimal subagent orchestration process — v1 (history)
 
-## Tổng quan
-Pattern 3 phases đã kiểm chứng trên SpoofX (3 researchers → 1 writer → 2 reviewers, tất cả PASS):
+## Overview
+3-phase pattern proven on SpoofX (3 researchers → 1 writer → 2 reviewers, all PASS):
 ```
-Phase 1: RESEARCH (song song) → Phase 2: IMPLEMENT (tuần tự) → Phase 3: REVIEW (song song)
+Phase 1: RESEARCH (parallel) → Phase 2: IMPLEMENT (sequential) → Phase 3: REVIEW (parallel)
 ```
 
-## Phase 1: Research (song song)
+## Phase 1: Research (parallel)
 
-**Khi nào song song được:** các subtask độc lập, không sửa cùng file, output là tài liệu (không phải code).
+**When parallel works:** subtasks are independent, do not edit the same file, output is documentation (not code).
 
-**Brief mẫu cho mỗi agent:**
+**Sample brief for each agent:**
 ```
-Task: <một câu, cụ thể>
-Skill: <đường dẫn SKILL.md — bắt buộc đọc trước khi làm>
+Task: <one sentence, specific>
+Skill: <SKILL.md path — must read before working>
 Context:
-- Repo: <đường dẫn, branch>
-- Files liên quan: <3-5 file, không cả repo>
-- Pattern hiện có: <file mẫu để follow>
+- Repo: <path, branch>
+- Related files: <3-5 files, not the whole repo>
+- Existing pattern: <sample file to follow>
 Constraints:
-- <rules liên quan, chỉ cái cần thiết>
-- <điều cấm cụ thể>
-Output: <format + đường dẫn file output>
-Non-goals: <liệt kê explicit những gì KHÔNG làm>
+- <relevant rules, only the necessary ones>
+- <specific prohibitions>
+Output: <format + output file path>
+Non-goals: <explicit list of what NOT to do>
 ```
 
-**Nguyên tắc:**
-- Mỗi agent output ra file markdown riêng (không sửa repo)
-- Nếu evidence không đủ: agent phải nói cần gì, không được đoán
-- Tối đa 3-4 agents song song (nhiều hơn khó theo dõi)
+**Principles:**
+- Each agent outputs to its own markdown file (does not edit the repo)
+- If evidence is insufficient: the agent must say what it needs, must not guess
+- At most 3-4 agents in parallel (more is hard to track)
 
-## Phase 2: Implement (tuần tự — 1 writer)
+## Phase 2: Implement (sequential — 1 writer)
 
-**Tại sao tuần tự:** tránh conflict khi nhiều agents sửa cùng file/khu vực.
+**Why sequential:** avoid conflicts when multiple agents edit the same file/area.
 
-**Brief mẫu:**
+**Sample brief:**
 ```
-Task: <implement từ các research packages>
-Skill: <skill implement của repo>
-Inputs: <danh sách research outputs từ Phase 1>
-Existing code: <files mẫu để follow>
-Rules: <rules bắt buộc>
-What to do: <steps cụ thể>
+Task: <implement from the research packages>
+Skill: <the repo's implement skill>
+Inputs: <list of research outputs from Phase 1>
+Existing code: <sample files to follow>
+Rules: <mandatory rules>
+What to do: <specific steps>
 Constraints:
 - <coding conventions>
-- <điều cấm>
-- Chỉ sửa: <danh sách file được phép>
-Output: <files đã sửa, chưa commit> + summary markdown
-Non-goals: commit, push, PR, build, test trên device
+- <prohibitions>
+- Edit only: <list of permitted files>
+Output: <edited files, uncommitted> + summary markdown
+Non-goals: commit, push, PR, build, test on device
 ```
 
-**Nguyên tắc:**
-- Writer KHÔNG tự quyết scope — chỉ implement những gì Phase 1 đã research xong
-- Nếu research nào ở trạng thái DRAFT → writer bỏ qua, ghi rõ lý do
-- Output chưa commit — parent quyết định merge sau review
+**Principles:**
+- The writer does NOT decide scope itself — it implements only what Phase 1 has fully researched
+- If a research item is in DRAFT state → the writer skips it, stating the reason clearly
+- Output is uncommitted — the parent decides on merging after review
 
-## Phase 3: Review (song song)
+## Phase 3: Review (parallel)
 
-**2 loại reviewer chạy song song:**
+**2 reviewer types running in parallel:**
 1. **Technical reviewer**: wiring, patterns, conventions, correctness
 2. **Safety reviewer**: security, privacy, charter boundaries
 
-**Brief mẫu:**
+**Sample brief:**
 ```
 Role: <reviewer role>
-Spec: <đường dẫn tới reviewer spec nếu có>
-What to review: <git diff hoặc danh sách files>
-Checklist: <từ spec, liệt kê cụ thể>
-Output: Verdict PASS/FAIL + issues với file:line, ghi ra markdown
-Non-goals: sửa code, commit
+Spec: <path to reviewer spec if any>
+What to review: <git diff or list of files>
+Checklist: <specific items from the spec>
+Output: Verdict PASS/FAIL + issues with file:line, written to markdown
+Non-goals: editing code, committing
 ```
 
-**Nguyên tắc:**
-- Reviewers read-only (không sửa file)
-- Cả 2 phải PASS mới được merge
-- Warnings không blocking được ghi lại nhưng không chặn
+**Principles:**
+- Reviewers are read-only (do not edit files)
+- Both must PASS before merging
+- Non-blocking warnings are recorded but do not block
 
-## Áp dụng cho repo mới (checklist)
+## Checklist for applying to a new repo
 
-Khi mang pattern này sang repo khác, cần xác định:
+When bringing this pattern to another repo, determine:
 
-1. **Skills**: repo có skills cho research/implement/review không? Nếu không, viết brief chi tiết hơn để bù.
-2. **Reviewers**: có reviewer specs không? Nếu không, định nghĩa checklist thủ công trong brief.
-3. **Rules**: đọc AGENTS.md + rules của repo, trích những điểm bắt buộc vào brief.
-4. **Phases**: task có tách được thành research/implement/review không? Nếu task đơn giản (1 file, rõ ràng), gộp Phase 1+2.
-5. **Song song**: subtasks có độc lập không? Có sửa cùng file không?
+1. **Skills**: does the repo have skills for research/implement/review? If not, write more detailed briefs to compensate.
+2. **Reviewers**: are there reviewer specs? If not, define the checklist manually in the brief.
+3. **Rules**: read the repo's AGENTS.md + rules, extract the mandatory points into the brief.
+4. **Phases**: can the task be split into research/implement/review? If the task is simple (1 file, clear), merge Phase 1+2.
+5. **Parallel**: are the subtasks independent? Do they edit the same file?
 
 ## Anti-patterns
 
-1. **Giao cả repo cho agent** → context quá lớn, chậm, lỗi nhiều
-2. **Nhiều writers cùng lúc** → conflict, khó review
-3. **Bỏ Phase 1** → writer đoán thay vì dựa trên evidence
-4. **Bỏ Phase 3** → lỗi safety lọt vào code
-5. **Brief mơ hồ** → agent làm sai hướng, phải làm lại
-6. **Không giới hạn files được sửa** → agent sửa lan man ngoài scope
+1. **Giving the whole repo to an agent** → context too large, slow, many errors
+2. **Multiple writers at once** → conflicts, hard to review
+3. **Skipping Phase 1** → the writer guesses instead of relying on evidence
+4. **Skipping Phase 3** → safety errors slip into code
+5. **Vague brief** → the agent works in the wrong direction, must redo
+6. **No limits on editable files** → the agent edits sprawlingly outside scope

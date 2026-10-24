@@ -3,8 +3,8 @@ name: grill-with-docs
 description: A relentless interview to sharpen a plan or design, which also creates docs (ADR's and glossary) as we go.
 ---
 
-# Chất vấn kế hoạch + tạo tài liệu: kết hợp grilling và domain-modeling — dùng khi muốn mài sắc plan/design đồng thời sinh ADR và glossary
+# Questioning a plan + creating docs: combining grilling and domain-modeling — use when you want to sharpen a plan/design while generating ADRs and a glossary
 
-Đọc và áp dụng cả hai skill: `grilling` (chất vấn không khoan nhượng cho tới khi đạt hiểu biết chung) và `domain-modeling` (ghi lại thuật ngữ vào GLOSSARY.md và quyết định vào ADR ngay khi chúng rõ ràng trong lúc chất vấn).
+Read and apply both skills: `grilling` (relentless questioning until a shared understanding is reached) and `domain-modeling` (recording terms in GLOSSARY.md and decisions in ADRs as soon as they become clear during questioning).
 
-Đường dẫn tài liệu resolve theo `domain-modeling`: `<product>`/`<decisions>` theo `~/workspace/harness/WORKFLOW.md`, nêu path trước khi ghi.
+Resolve doc paths per `domain-modeling`: `<product>`/`<decisions>` per `~/workspace/harness/WORKFLOW.md`; state the path before writing.

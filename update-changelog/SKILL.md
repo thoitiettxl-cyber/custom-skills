@@ -3,7 +3,7 @@ name: update-changelog
 description: "Read this skill before updating changelogs"
 ---
 
-# Cập nhật CHANGELOG từ commit kể từ tag gần nhất — dùng khi cập nhật changelog trước release
+# Updating CHANGELOG from commits since the latest tag — use when updating the changelog before a release
 
 Update the repository changelog with changes between the last release and the current version (`main`) that are not yet incorporated. If `CHANGELOG.md` does not exist, use `CHANGELOG` instead.
 

@@ -3,13 +3,13 @@ name: improve-codebase-architecture
 description: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
 ---
 
-# Rà soát kiến trúc codebase: tìm cơ hội deepening, báo cáo HTML trực quan — dùng khi muốn cải thiện kiến trúc module, tăng testability
+# Reviewing codebase architecture: finding deepening opportunities, visual HTML report — use when you want to improve module architecture and increase testability
 
 Surface architectural friction and propose **deepening opportunities**: refactors that turn shallow modules into deep ones. The aim is testability and AI-navigability.
 
 This command is _informed_ by the project's domain model and built on a shared design vocabulary:
 
-- Đọc skill `codebase-design` để lấy từ vựng kiến trúc (**module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**) and its principles (the deletion test, "the interface is the test surface", "one adapter = hypothetical seam, two = real"). Use these terms exactly in every suggestion, and don't drift into "component," "service," "API," or "boundary."
+- Read skill `codebase-design` for the architecture vocabulary (**module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**) and its principles (the deletion test, "the interface is the test surface", "one adapter = hypothetical seam, two = real"). Use these terms exactly in every suggestion, and don't drift into "component," "service," "API," or "boundary."
 - The domain language in `GLOSSARY.md` (at `<product>/`, resolved per `~/workspace/harness/WORKFLOW.md`) gives names to good seams; ADRs in `<decisions>/` record decisions this command should not re-litigate.
 
 ## Process
@@ -60,11 +60,11 @@ Do NOT propose interfaces yet. After the file is written, ask the user: "Which o
 
 ### 3. Grilling loop
 
-Once the user picks a candidate, đọc và áp dụng skill `grilling` để đi qua decision tree cùng user: constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
+Once the user picks a candidate, read and apply skill `grilling` to walk the decision tree with the user: constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
 
-Side effects happen inline as decisions crystallize; đọc và áp dụng skill `domain-modeling` để giữ domain model luôn cập nhật trong lúc làm:
+Side effects happen inline as decisions crystallize; read and apply skill `domain-modeling` to keep the domain model up to date while working:
 
 - **Naming a deepened module after a concept not in `GLOSSARY.md`?** Add the term to `GLOSSARY.md`. Create the file lazily if it doesn't exist.
 - **Sharpening a fuzzy term during the conversation?** Update `GLOSSARY.md` right there.
 - **User rejects the candidate with a load-bearing reason?** Offer an ADR, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing; skip ephemeral reasons ("not worth it right now") and self-evident ones.
-- **Want to explore alternative interfaces for the deepened module?** Đọc skill `codebase-design` và dùng pattern design-it-twice (parallel sub-agents) của nó.
+- **Want to explore alternative interfaces for the deepened module?** Read skill `codebase-design` and use its design-it-twice pattern (parallel sub-agents).

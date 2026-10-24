@@ -4,7 +4,7 @@ description: "Remote control tmux sessions for interactive CLIs (python, gdb, et
 license: Vibecoded
 ---
 
-# Điều khiển tmux cho CLI tương tác (python, gdb): gửi phím, đọc pane — dùng khi cần REPL hoặc process chạy lâu
+# Controlling tmux for interactive CLIs (python, gdb): sending keys, reading panes — use when you need a REPL or a long-running process
 
 Use tmux as a programmable terminal multiplexer for interactive work. Works on Linux and macOS with stock tmux; avoid custom config by using a private socket.
 

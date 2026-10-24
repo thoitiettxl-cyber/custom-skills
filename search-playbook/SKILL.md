@@ -3,10 +3,10 @@ name: search-playbook
 description: "Search routing playbook for this system. Use when searching the web, checking current facts, reading docs, comparing sources, or before writing a utility that may already exist. Routes the native-web-search pattern, browser.search, browser.deep_research, Exa, Firecrawl, Context7, vendor docs MCPs, gh, and local repo search."
 ---
 
-# Playbook định tuyến search: need → kênh tra cứu — dùng khi tìm web, kiểm chứng fact, đọc docs, so sánh nguồn, hoặc trước khi viết utility mới
+# Search routing playbook: need → lookup channel — use when searching the web, verifying a fact, reading docs, comparing sources, or before writing a new utility
 
-(Adapted từ bản Pi-session: giữ methodology — rules, routing, checklist —
-bỏ các kênh Pi-only, ánh xạ sang công cụ của hệ mình.)
+(Adapted from the Pi-session version: keeping the methodology — rules, routing, checklist —
+dropping Pi-only channels, mapped onto this system's tools.)
 
 Use this routing for the tools installed in this system. Do not invent tool
 names. If a channel is missing, say so. Do not report "nothing found" for a

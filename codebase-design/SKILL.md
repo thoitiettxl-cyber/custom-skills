@@ -3,7 +3,7 @@ name: codebase-design
 description: Shared vocabulary for designing deep modules. Use when the user wants to design or improve a module's interface, find deepening opportunities, decide where a seam goes, make code more testable or AI-navigable, or when another skill needs the deep-module vocabulary.
 ---
 
-# Thiết kế deep module: interface nhỏ, implementation sâu — dùng khi thiết kế/cải thiện module, chọn vị trí seam, tăng tính testable của code
+# Designing deep modules: small interface, deep implementation — use when designing/improving a module, choosing a seam location, or increasing code testability
 
 Design **deep modules**: a lot of behaviour behind a small interface, placed at a clean seam, testable through that interface. Use this language and these principles wherever code is being designed or restructured. The aim is leverage for callers, locality for maintainers, and testability for everyone.
 

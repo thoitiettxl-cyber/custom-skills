@@ -3,7 +3,7 @@ name: verify-before-claiming
 description: Use whenever a response would make a factual claim about an external tool, library, product, repository, or its current feature set — especially when comparing two systems, evaluating whether a project has "ported" or "matched" another, or reacting to a report of work someone (or some other AI agent) claims to have completed. Push hard to trigger this when the user references a specific named project/repo, asks to learn from or port behavior from one system into another, pastes a changelog/commit summary/agent report and asks for a reaction, or asks "is this true / does this actually work / is this really the same as X." Do not rely on memory alone for claims about current feature support, API shapes, or "what X does" — verify against a live source first.
 ---
 
-# Kiểm chứng trước khi khẳng định: tra nguồn chính trước khi nói về tool/library/repo — dùng khi so sánh hệ thống, đánh giá báo cáo của agent khác, hoặc hỏi "có thật không"
+# Verifying before claiming: checking primary sources before speaking about a tool/library/repo — use when comparing systems, evaluating another agent's report, or asking "is that really true?"
 
 ## Why this exists
 

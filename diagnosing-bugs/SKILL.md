@@ -3,7 +3,7 @@ name: diagnosing-bugs
 description: Diagnosis loop for hard bugs and performance regressions. Use when the user says "diagnose"/"debug this", or reports something broken/throwing/failing/slow.
 ---
 
-# Chẩn đoán bug khó và performance regression: vòng lặp feedback → reproduce → giả thuyết → fix — dùng khi user báo bug/chậm/crash hoặc yêu cầu debug
+# Diagnosing hard bugs and performance regressions: feedback → reproduce → hypothesis → fix loop — use when the user reports a bug/slowness/crash or asks for debugging
 
 A discipline for hard bugs. Skip phases only when explicitly justified.
 

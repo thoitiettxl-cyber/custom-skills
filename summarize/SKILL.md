@@ -3,7 +3,7 @@ name: summarize
 description: "Fetch a URL or convert a local file (PDF/DOCX/HTML/etc.) into Markdown using `uvx markitdown`, optionally it can summarize"
 ---
 
-# Chuyển URL/PDF/DOCX/PPTX/HTML sang Markdown bằng markitdown, tóm tắt tùy chọn — dùng khi cần đọc hoặc tóm tắt tài liệu, trang web
+# Converting URL/PDF/DOCX/PPTX/HTML to Markdown with markitdown, optional summary — use when you need to read or summarize a document or web page
 
 Turn “things” (URLs, PDFs, Word docs, PowerPoints, HTML pages, text files, etc.) into **Markdown** so they can be inspected/quoted/processed like normal text.
 

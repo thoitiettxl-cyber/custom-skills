@@ -5,7 +5,7 @@ metadata:
   origin: ECC
 ---
 
-# Thiết kế REST API: đặt tên resource, status code, pagination, lỗi, versioning — dùng khi thiết kế hoặc review endpoint
+# REST API design: resource naming, status codes, pagination, errors, versioning — use when designing or reviewing endpoints
 
 Conventions and best practices for designing consistent, developer-friendly REST APIs.
 
