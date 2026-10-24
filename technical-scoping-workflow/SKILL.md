@@ -3,7 +3,7 @@ name: technical-scoping-workflow
 description: Use when scoping a non-trivial technical effort that requires comparing current and target systems, prioritizing multiple gaps, sequencing dependent work, planning migrations, integrations, or feature-parity work, or producing an execution spec for a teammate or coding agent. Also use when reviewing a progress report to identify remaining gaps and next priorities. Do not use for a single isolated change, a simple explanation, or immediate implementation that does not need a separate scoping deliverable.
 ---
 
-# Lập phạm vi kỹ thuật: evidence baseline → gap matrix → ưu tiên/phân pha — dùng khi scoping migration/integration/feature-parity hoặc review báo cáo tiến độ
+# Scoping technical work: evidence baseline → gap matrix → priorities/phases — use when scoping migration/integration/feature-parity or reviewing a progress report
 
 Produce an evidence-backed scope that makes priorities, decisions, dependencies,
 risks, and completion criteria explicit without prematurely prescribing an

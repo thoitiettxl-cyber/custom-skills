@@ -3,7 +3,7 @@ name: ghidra
 description: "Reverse engineer binaries using Ghidra's headless analyzer. Decompile executables, extract functions, strings, symbols, and analyze call graphs without GUI."
 ---
 
-# Phân tích binary bằng Ghidra headless — dùng khi cần reverse engineer file thực thi, firmware, decompile sang C, trích functions/strings/symbols/call graph
+# Analyzing binaries with headless Ghidra — use when you need to reverse engineer an executable or firmware, decompile to C, or extract functions/strings/symbols/call graphs
 
 Perform automated reverse engineering using Ghidra's `analyzeHeadless` tool. Import binaries, run analysis, decompile to C code, and extract useful information.
 

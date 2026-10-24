@@ -3,7 +3,7 @@ name: cli-creator
 description: Build a composable CLI for Muse from API docs, an OpenAPI spec, existing curl examples, an SDK, a web app, an admin tool, or a local script. Use when the user wants Muse to create a command-line tool that can run from any repo, expose composable read/write commands, return stable JSON, manage auth, and pair with a companion skill.
 ---
 
-# Tạo CLI bền từ API docs/OpenAPI/curl/SDK, xuất JSON, quản lý auth — dùng khi cần tool dòng lệnh dùng lại được
+# Building a durable CLI from API docs/OpenAPI/curl/SDK, emitting JSON, managing auth — use when you need a reusable command-line tool
 
 Create a real CLI that future Codex threads can run by command name from any working directory.
 

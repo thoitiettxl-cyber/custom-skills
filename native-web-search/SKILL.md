@@ -3,36 +3,36 @@ name: native-web-search
 description: "Quick web-research pattern: separate the query from its purpose, get a concise summary with full source URLs per finding. Use when you need fast internet research with explicit URLs and disagreements called out."
 ---
 
-# Tìm kiếm web nhanh theo pattern query + purpose — dùng khi cần research nhanh, tóm tắt gọn kèm URL nguồn đầy đủ cho từng phát hiện
+# Fast web search following the query + purpose pattern — use when you need quick research, a concise summary with full source URLs for each finding
 
-(Bản gốc đi kèm `search.mjs` chạy trên Pi runtime — đã bỏ theo quyết định của Boss.
-Skill này chỉ giữ lại pattern, ánh xạ sang công cụ search của hệ mình.)
+(The original came with `search.mjs` running on the Pi runtime — dropped by Boss's decision.
+This skill keeps only the pattern, mapped onto this system's search tools.)
 
 ## Pattern
 
-Tách bạch hai thứ trong mọi lần research:
+Keep two things separate in every research pass:
 
-- **query**: cái cần tìm (vd "latest python release")
-- **purpose**: vì sao cần (vd "update dependency notes") — purpose quyết định
-  thông tin nào đáng giữ, thông tin nào bỏ.
+- **query**: what to find (e.g. "latest python release")
+- **purpose**: why it is needed (e.g. "update dependency notes") — the purpose decides
+  which information is worth keeping and which to drop.
 
-## Cách chạy trong hệ mình
+## How to run on this system
 
-- Research nhanh: `browser.search`, đặt `verticals` phù hợp
+- Quick research: `browser.search`, setting a suitable `verticals`
   (`news`, `sports`, `weather`, `finance`, `datetime`).
-- Research sâu, cần đối chiếu nhiều nguồn: `browser.deep_research`.
-- Fallback khi cần: Exa / Firecrawl qua MCP.
+- Deep research, needing cross-checking across many sources: `browser.deep_research`.
+- Fallback when needed: Exa / Firecrawl via MCP.
 
 ## Output expectations
 
-Mọi kết quả research theo pattern này phải có:
+Every research result following this pattern must have:
 
-- 3–7 key findings; mỗi finding gồm: tiêu đề, vì sao nó quan trọng **cho
-  purpose đã nêu**, và full canonical URL (`https://...`)
-- chỗ nào các nguồn mâu thuẫn nhau thì gọi tên rõ, không giấu
-- kết thúc bằng khuyến nghị ngắn: nên tin nguồn nào trước
+- 3–7 key findings; each finding consists of: a title, why it matters **for
+  the stated purpose**, and a full canonical URL (`https://...`)
+- wherever sources disagree, name the disagreement explicitly, do not hide it
+- end with a short recommendation: which source(s) to trust first
 
-## Prompt mẫu (khi giao research cho subagent hoặc model khác)
+## Sample prompt (when handing research to a subagent or another model)
 
 ```
 Search the internet for: <query>
@@ -48,5 +48,5 @@ Return a concise research summary with:
 
 ## Notes
 
-- Mỗi finding phải gắn URL đọc được thật — không bịa URL để lấp chỗ trống.
-- Phân biệt rõ "đã đọc từ nguồn" và "suy luận" (xem skill `verify-before-claiming`).
+- Every finding must carry a real, readable URL — do not invent URLs to fill gaps.
+- Clearly distinguish "read from a source" from "inference" (see skill `verify-before-claiming`).

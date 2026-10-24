@@ -3,7 +3,7 @@ name: apk-reverse
 description: Reverse Android APKs from the CLI — unpack, decompile, patch smali, rebuild, and hook with Frida.
 ---
 
-# Phân tích APK Android trên CLI: giải mã, sửa smali, rebuild và hook bằng Frida — dùng khi cần reverse APK, patch logic, hoặc quan sát app lúc chạy
+# Analyzing Android APKs on the CLI: unpacking, patching smali, rebuilding, and hooking with Frida — use when you need to reverse an APK, patch logic, or observe an app at runtime
 
 > **Source & adaptation.** Adapted from `skills/apk-reverse` in
 > [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill)

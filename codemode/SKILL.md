@@ -1,63 +1,63 @@
 ---
 name: codemode
-description: Chạy JavaScript do model viết trong sandbox QuickJS (worker thread) với 4 tools hệ thống read/write/exec/mcp. Dùng khi cần gộp nhiều bước đọc-ghi-chạy lệnh-gọi MCP thành một script duy nhất thay vì gọi từng tool lẻ — các nested tool calls không đi vào LLM context, chỉ output và return value đi vào.
+description: Run model-written JavaScript in a QuickJS sandbox (worker thread) with 4 system tools read/write/exec/mcp. Use when you need to combine many read-write-run-command-call-MCP steps into a single script instead of calling individual tools — nested tool calls do not enter LLM context, only output and return value do.
 ---
 
-# Codemode — gộp nhiều bước đọc/ghi file, chạy shell, gọi MCP thành một script JS trong sandbox
+# Codemode — combining many file read/write, shell run, and MCP call steps into one JS script in a sandbox
 
-Hệ thống đã đăng ký sẵn codemode làm mặc định: chạy JS do model viết trong QuickJS VM
-(WebAssembly), capability duy nhất là gọi các tools được inject từ host.
-Dựa trên `@earendil-works/pi-codemode@1.2.0` (pin exact). Code tại `~/workspace/codemode/`,
-binary tại `~/.local/bin/codemode`, state tại `~/.config/codemode/store.json`.
-Repo public: `thoitiettxl-cyber/muse-codemode` (kèm `smoke.sh` — 10 checks).
-Mọi thứ nằm dưới `~`, nên theo AGENTS.md:62 sẽ còn sau VM replace (home là volume btrfs riêng mount tại `/home/hatch`).
+The system has codemode registered by default: run model-written JS in the QuickJS VM
+(WebAssembly), whose only capability is calling tools injected from the host.
+Based on `@earendil-works/pi-codemode@1.2.0` (exact pin). Code at `~/workspace/codemode/`,
+binary at `~/.local/bin/codemode`, state at `~/.config/codemode/store.json`.
+Public repo: `thoitiettxl-cyber/muse-codemode` (with `smoke.sh` — 10 checks).
+Everything lives under `~`, so per AGENTS.md:62 it survives a VM replace (home is a separate btrfs volume mounted at `/home/hatch`).
 
-## Khi nào dùng thay vì gọi tool lẻ
+## When to use instead of individual tool calls
 
-- Cần **chuỗi nhiều bước** (đọc file → xử lý → ghi file → chạy lệnh → gọi MCP) mà mỗi bước
-  phụ thuộc kết quả bước trước: viết một script, chạy một lần, chỉ nhận output + return value.
-- Cần **lặp / rẽ nhánh / try-catch** quanh các tool calls mà không tốn nhiều turn LLM.
-- KHÔNG dùng khi chỉ cần 1-2 tool call đơn giản — gọi trực tiếp nhanh hơn.
+- Need a **multi-step chain** (read file → process → write file → run command → call MCP) where each step
+  depends on the previous step's result: write one script, run it once, receive only output + return value.
+- Need **loops / branching / try-catch** around tool calls without spending many LLM turns.
+- Do NOT use when only 1-2 simple tool calls are needed — calling them directly is faster.
 
-## Cách dùng
+## Usage
 
 ```bash
-codemode script.js              # chạy script từ file
-echo 'return 1+1' | codemode    # hoặc từ stdin
-codemode --declarations         # in TypeScript declarations của 4 tools (luôn đúng với code)
-codemode --json script.js       # output JSON máy đọc được
+codemode script.js              # run a script from a file
+echo 'return 1+1' | codemode    # or from stdin
+codemode --declarations         # print TypeScript declarations of the 4 tools (always true to the code)
+codemode --json script.js       # machine-readable JSON output
 codemode --timeout-ms 120000 script.js
-codemode --no-store script.js   # không dùng store() persistent
+codemode --no-store script.js   # do not use the persistent store()
 ```
 
-Script là body của một async function: top-level `await` và `return` dùng được.
-Dòng đầu có thể là: `// @options: {"max_output_tokens": 2000, "timeout_ms": 30000}`
-(`timeout_ms` là deadline cứng cho cả script, `max_output_tokens` cắt output).
+A script is the body of an async function: top-level `await` and `return` work.
+The first line may be: `// @options: {"max_output_tokens": 2000, "timeout_ms": 30000}`
+(`timeout_ms` is a hard deadline for the whole script, `max_output_tokens` truncates output).
 
-Trong script có: `tools.read/write/exec/mcp`, `ALL_TOOLS`, `text()`, `image()`,
-`console.*`, `exit()`, `store(key, value)` / `load(key)` (persist qua các lần chạy).
+Inside a script: `tools.read/write/exec/mcp`, `ALL_TOOLS`, `text()`, `image()`,
+`console.*`, `exit()`, `store(key, value)` / `load(key)` (persist across runs).
 
-Exit code: 0 ok, 1 lỗi script, 2 timeout, 3 aborted, 4 lỗi sandbox/host,
-5 dòng `// @options:` sai, 6 sai cách dùng.
+Exit codes: 0 ok, 1 script error, 2 timeout, 3 aborted, 4 sandbox/host error,
+5 bad `// @options:` line, 6 usage error.
 
-## Tools mặc định (xem `codemode --declarations` để có bản mới nhất)
+## Default tools (see `codemode --declarations` for the latest version)
 
-- `read({path, encoding?, maxBytes?})` — đọc file dưới `$HOME` (relative resolve từ `$HOME`).
-- `write({path, content, encoding?})` — ghi file dưới `$HOME`, tự tạo thư mục cha.
-- `exec({command, args?, cwd?, timeoutMs?, shell?, maxOutputBytes?})` — chạy lệnh;
-  **luôn có timeout** (mặc định 30s, tối đa 120s), lệnh treo bị SIGKILL và báo lỗi;
-  `cwd` mặc định `$HOME` và phải nằm dưới `$HOME`; `shell:true` để dùng pipe/glob qua bash.
-- `mcp({server, name, args?, timeoutMs?})` — gọi tool MCP qua **session persistent**
-  (connect 1 lần/run, tái dùng cho mọi call — workflow nhiều bước giữ được
-  server-side state giữa các call); servers: openai-docs, xai-docs,
+- `read({path, encoding?, maxBytes?})` — read a file under `$HOME` (relative paths resolve from `$HOME`).
+- `write({path, content, encoding?})` — write a file under `$HOME`, creating parent directories automatically.
+- `exec({command, args?, cwd?, timeoutMs?, shell?, maxOutputBytes?})` — run a command;
+  **always has a timeout** (default 30s, max 120s); a hanging command is SIGKILLed and reported as an error;
+  `cwd` defaults to `$HOME` and must be under `$HOME`; `shell:true` to use pipes/globs via bash.
+- `mcp({server, name, args?, timeoutMs?})` — call an MCP tool over a **persistent session**
+  (connect once per run, reuse for every call — multi-step workflows keep
+  server-side state between calls); servers: openai-docs, xai-docs,
   anthropic-docs, context7, exa, firecrawl, inspo.
 
-Mọi path trong `read`/`write`/`exec.cwd` đều bị chặn nếu thoát khỏi `$HOME`.
+Every path in `read`/`write`/`exec.cwd` is blocked if it escapes `$HOME`.
 
-## Ví dụ script mẫu
+## Sample scripts
 
 ```js
-// đọc package.json, đếm dependencies, ghi báo cáo, trả về số lượng
+// read package.json, count dependencies, write a report, return the count
 const src = await tools.read({ path: "workspace/codemode/package.json" });
 const deps = Object.keys(JSON.parse(src).dependencies ?? {});
 const out = await tools.write({
@@ -71,14 +71,14 @@ return deps.length;
 ```
 
 ```js
-// gọi MCP: tra docs của quickjs qua context7 (resolve libraryId trước, timeout riêng 20s)
+// call MCP: look up quickjs docs via context7 (resolve libraryId first, separate 20s timeout)
 const lib = await tools.mcp({
   server: "context7",
   name: "resolve-library-id",
   args: { query: "QuickJS memory limit", libraryName: "quickjs" },
   timeoutMs: 20000,
 });
-text(String(lib).slice(0, 500)); // chọn libraryId (dạng "/org/project") từ kết quả
+text(String(lib).slice(0, 500)); // pick a libraryId (form "/org/project") from the result
 const doc = await tools.mcp({
   server: "context7",
   name: "query-docs",
@@ -89,9 +89,9 @@ text(doc.slice(0, 500));
 return "done";
 ```
 
-## Lưu ý
+## Notes
 
-- Script lỗi (throw không catch, tool reject) → `result.ok=false`, CLI exit 1, stderr có stack `codemode.js:<line>`.
-- Script treo không gọi tool (vòng lặp vô hạn) → fail `timeout`, worker bị terminate, runner không treo.
-- `store()`/`load()` lưu vào `~/.config/codemode/store.json`, dùng `--no-store` để tắt.
-- Giới hạn: VM QuickJS là interpreter (tính toán nặng chậm hơn V8); không có timers/fetch/process/require trong script — mọi I/O đều qua tools.
+- Script error (uncaught throw, tool rejection) → `result.ok=false`, CLI exit 1, stderr has a `codemode.js:<line>` stack.
+- Script hanging without calling a tool (infinite loop) → `timeout` failure, worker terminated, runner does not hang.
+- `store()`/`load()` save to `~/.config/codemode/store.json`; use `--no-store` to disable.
+- Limits: the QuickJS VM is an interpreter (heavy computation is slower than V8); no timers/fetch/process/require in scripts — all I/O goes through tools.

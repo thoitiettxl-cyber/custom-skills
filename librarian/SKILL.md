@@ -3,7 +3,7 @@ name: librarian
 description: "Cache and refresh remote git repositories under ~/.cache/checkouts/<host>/<org>/<repo> so future references can reuse a local copy. Use this skill when the user points you to a remote git repository as reference or you encountered a remote git repo through other means."
 ---
 
-# Cache repo git từ xa vào ~/.cache/checkouts để tái sử dụng — dùng khi user đưa link GitHub/GitLab hoặc owner/repo làm tham khảo
+# Caching remote git repos into ~/.cache/checkouts for reuse — use when the user gives a GitHub/GitLab link or owner/repo as reference
 
 Use this skill when the user points you to a remote git repository (GitHub/GitLab/Bitbucket URLs, `git@...`, or `owner/repo` shorthand).
 

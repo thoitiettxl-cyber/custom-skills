@@ -3,7 +3,7 @@ name: linkage-checks
 description: "Turn 'defined in A, must appear in B' invariants into CI check scripts. Use when a repo has definition/usage pairs that drift silently (toggles without UI rows, modules without registry keys, JNI names, i18n keys, routes, permissions). Scaffolds bash+python check scripts (A→B, B→A or both) with escape hatches, a self-running fixture test, and guidance for wiring into the repo's native validation."
 ---
 
-# Kiểm tra linkage: biến invariant "định nghĩa ở A phải xuất hiện ở B" thành check script — dùng khi repo có cặp definition/usage dễ drift thầm lặng (toggle, JNI, i18n key, route, permission)
+# Checking linkage: turning the invariant "defined in A must appear in B" into a check script — use when a repo has definition/usage pairs that drift silently (toggle, JNI, i18n key, route, permission)
 
 A **linkage** is an invariant of the form: *everything defined at site A must
 appear at site B*. When it breaks silently, the bug is invisible until runtime:
