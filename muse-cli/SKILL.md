@@ -310,7 +310,7 @@ unless the user asks.
 
 Config: `~/.config/castctl/config.json` (mode 0600). The driver profile
 is `muse01-proxy`: its `cookies_file` is the existing
-`/home/hatch/.config/muse-cli/profiles/muse01/cookies.txt` — the SAME
+`/home/<user>/.config/muse-cli/profiles/muse01/cookies.txt` — the SAME
 file the `muse01` profile uses. Never copy, move, back up, or read the
 cookie file; never point the profile at a copy. Every `no1` call
 re-derives the `muse01-proxy` outbound from the current proxy env
