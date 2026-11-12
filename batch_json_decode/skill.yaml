@@ -1,0 +1,22 @@
+name: batch_json_decode
+title: Decode external JSON batches per item
+description: Decode each item in an external JSON batch independently so one bad or null item cannot poison the rest, when porting or consuming a batched API.
+category: Work and knowledge
+include_in_prompt: false
+skill_improvement:
+  managed: true
+  status: active
+  evidence_handles:
+  - M5a writer head 9d0e360
+  - M5a fix loop 1 head 4238d34
+  - M5a fix loop 2 head 7a0ae00
+  - go-telegram/bot v1.27.1-0.20261008103508 get_updates RawMessage plus decodeUpdate per item
+  measurement:
+    proxy_metric_id: objective_success_rate
+    success_criterion: In the next 30 days no port or review certifies batch parity while a poisoned item fixture fails, and no whole batch decode failure recurs in the evidence.
+    window_days: 30
+  needs_review: false
+  rationale: 'M5a reviews certified Telegram update parity twice while Rust decoded the whole batch at once, so one malformed update starved every good update. The upstream Go library decodes each RawMessage item separately, skips the bad item, and still advances the offset from its best effort update id. Serde defaults alone did not fix explicit nulls. No existing skill covers this: rust-port lists observable behavior in general, probe-first covers untested claims in general, and verify-before-claiming covers checking primary sources in general, but none names per item decode or null as absent for batched JSON.'
+  review_after: 2026-12-05T16:23:54.342305+00:00
+  reviewed_at: 2026-11-05T16:23:54.342305+00:00
+  run_id: sirun_60a439442b75471f86f7c7ea7a87f8b5

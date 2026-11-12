@@ -1,0 +1,22 @@
+name: manifest_lock_gate
+title: Gate manifest and lockfile changes
+description: Prove a manifest change landed with its lockfile diff and a locked build on the committed tree, when a dependency or manifest file changes.
+category: Work and knowledge
+include_in_prompt: false
+skill_improvement:
+  managed: true
+  status: active
+  evidence_handles:
+  - M5a fix loop 1 head 4238d34
+  - M5a fix loop 2 head 7a0ae00
+  - M5a L1 Cargo.toml rand workspace true with lock entry lacking rand
+  - M5a lock diff exactly plus rand after fix, cargo build --locked exit 0, git status clean after gates
+  measurement:
+    proxy_metric_id: objective_success_rate
+    success_criterion: In the next 30 days no manifest change lands with an unreviewed lock diff, an unlocked build, or a gate report claiming committed tree state while the tree was dirty.
+    window_days: 30
+  needs_review: false
+  rationale: In M5a a manifest declared a workspace dependency while the lockfile lacked it, the report checked a lockfile diff at the repo root where no lockfile exists, and the gates ran on a tree that the tooling auto updated. The fix was a one line lock diff plus a locked build and a clean tree check. Rust best practices says to commit Cargo.lock for binaries but does not name the lock diff, the locked build, or the clean tree check after gates, and no other searched skill covers them.
+  review_after: 2026-12-05T16:23:54.342305+00:00
+  reviewed_at: 2026-11-05T16:23:54.342305+00:00
+  run_id: sirun_60a439442b75471f86f7c7ea7a87f8b5

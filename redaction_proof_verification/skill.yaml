@@ -1,0 +1,22 @@
+name: redaction_proof_verification
+title: Verify secret-bearing claims by count and hash
+description: Prove a claim about a secret, token, or credential string in code or output by count and hash instead of trusting rendered text, when the rendered text may redact the value.
+category: Work and knowledge
+include_in_prompt: false
+skill_improvement:
+  managed: true
+  status: active
+  evidence_handles:
+  - M7b RT-N1 sha256 012fff69 grep -c auth_token percent-s equals 1
+  - Go driver grep -c auth_token percent-s equals 1 line 1190
+  - M7b round4 Rust count 1 sha256 ada5ea51 harness log auth_token count 0
+  - MEMORY.md display redaction trap 2026-11-05 and 2026-11-06
+  measurement:
+    proxy_metric_id: objective_success_rate
+    success_criterion: In the next 30 days no review or gate certifies or rejects a secret-bearing code claim from rendered text alone, and every such claim in the evidence carries a count and a hash.
+    window_days: 30
+  needs_review: false
+  rationale: 'The display layer rendered auth_token as redacted in tool output and agents repeatedly judged secret-bearing code from that rendering: a Go driver fix was wrongly called comment-only until a count of one and sha256 012fff69 proved it real, and a connector check wrongly claimed an extra token from redacted sed output until Boss read the source. MEMORY.md already warns about this trap, yet it struck again in M7b, so the warning alone does not change behaviour. I read probe-first and verify-before-claiming: neither names the redaction case or the count and hash proof, so this narrow new skill adds the missing mechanism without duplicating them.'
+  review_after: 2026-12-06T16:23:54.265638+00:00
+  reviewed_at: 2026-11-06T16:23:54.265638+00:00
+  run_id: sirun_5f3b62dbb10449fba7e26fb8009a9ca7
